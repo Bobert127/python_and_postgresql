@@ -3,7 +3,7 @@ from clcrypto import hash_password
 
 
 class User:
-    def __init__(self, usename="", password="", salt="")
+    def __init__(self, username="", password="", salt=""):
         self._id = -1
         self.usename = usename
         self._hashed_password = self.hashed_password(password, salt)
@@ -114,4 +114,18 @@ class Messages:
             loaded_message.creation_date = creation_date
             messages.append(loaded_message)
         return messages
+
+    def save_to_db(self, cursor):
+        if self._id == -1:
+            sql = """INSERT INTO Messages(from_id, to_id, text)
+                            VALUES(%s, %s, %s) RETURNING id, creation_date"""
+            values = (self.from_id, self.to_id, self.text)
+            cursor.execute(sql, values)
+            self._id, self._creation_date = cursor.fetchone()
+            return True
+        else:
+            sql = """UPDATE Messages SET to_id=%s, from_id=%s, text=%s WHERE id=%s"""
+            values = (self.self.from_id, self.to_id, self.text, self.id)
+            cursor.execute(sql, values)
+            return True
 
