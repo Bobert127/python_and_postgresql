@@ -1,11 +1,12 @@
 from create_db import password
+from clcrypto import hash_password
 
 
 class User:
     def __init__(self, usename="", password="", salt="")
         self._id = -1
         self.usename = usename
-        self._hashed_password = hashed_password(password, salt)
+        self._hashed_password = self.hashed_password(password, salt)
 
     @property
     def id(self):
@@ -80,4 +81,37 @@ class User:
         self._id = -1
         return True
 
+class Messages:
+
+    def __init__(self):
+        self._id = -1
+        self.from_id = from_id
+        self.to_id = to_id
+        self.text = text
+        self._creation_date = None
+
+    def creation_date(self):
+        return self._creation_date
+
+    @property
+    def id(self):
+        return self._id
+
+    @staticmethod
+    def load_all_messages(cursor, user_id=None):
+        if user_id:
+            sql = "SELECT * FROM messages"
+            cursor.execute(sql, (user_id,))
+        else:
+            sql = "SELECT * FROM messages"
+            cursor.execute(sql)
+
+        messages = []
+        for row in cursor.fetchall():
+            id_, from_id, to_id, text, creation_date = row
+            loaded_message = Message(from_id, to_id, text)
+            loaded_message._id = id_
+            loaded_message.creation_date = creation_date
+            messages.append(loaded_message)
+        return messages
 
