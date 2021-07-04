@@ -3,7 +3,6 @@ from sqlite3 import OperationalError
 from psycopg2 import connect
 from psycopg2.errors import DuplicateDatabase
 
-Create_db = 'CREATE DATABASE workshop;'
 
 create_users_table = """create table users (
     id serial PRIMARY KEY,
@@ -20,15 +19,17 @@ create_messages_table = """ create table messages (
 
 try:
 
-    USER = 'postgres'
-    password = 'coderslab'
-    host = 'localhost'
-    
-    cnx = connect(user=USER, password=password, host=host)
+    USER = "postgres"
+    password = "coderslab"
+    host = "localhost"
+    database = "workshop"
+
+    cnx = connect(database=database, user=USER, password=password, host=host)
     cnx.autocommit = True
     cursor = cnx.cursor()
     try:
-        cursor execute(Create_db)
+        cursor.execute(create_users_table)
+        cursor.execute(create_users_table)
         print("Table created")
     except DuplicateDatabase as d:
         print("Table exists ", d)
