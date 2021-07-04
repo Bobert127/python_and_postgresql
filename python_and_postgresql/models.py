@@ -53,15 +53,15 @@ class User:
 
     @staticmethod
     def load_user_by_id(cursor, id_):
-    sql = "SELECT id, username, hashed_password FROM users WHERE id = %s"
-    cursor.execute(sql, (id_,))
-    date = cursor.fetchone()
-    if date:
-        id_, username, hashed_password = date
-        loaded_user = User(username)
-        loaded_user._id = id_
-        loaded_user._hashed_password = hashed_password
-        return loaded_user
+        sql = "SELECT id, username, hashed_password FROM users WHERE id = %s"
+        cursor.execute(sql, (id_,))
+        date = cursor.fetchone()
+        if date:
+            id_, username, hashed_password = date
+            loaded_user = User(username)
+            loaded_user._id = id_
+            loaded_user._hashed_password = hashed_password
+            return loaded_user
 
     @staticmethod
     def load_all_users(cursor):
