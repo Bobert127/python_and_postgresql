@@ -5,18 +5,20 @@ from psycopg2.errors import DuplicateDatabase
 
 CREATE_DB = "CREATE DATABASE workshop;"
 
-create_users_table = """create table users (
+create_users_table = """create table users(
     id serial PRIMARY KEY,
     username varchar(255) UNIQUE,
-    hashed_password varchar(80)
-)"""
-create_messages_table = """ create table messages (
+    hashed_password varchar(80))"""
+
+create_messages_table = """create table messages(
     id serial PRIMARY KEY,
-    from_id INTEGER REFERENCES  users(id) ON DELETE CASCADE,
-    to_id INTEGER REFERENCES  users(id) ON DELETE CASCAD
+    from_id serial,
+    to_id serial,
+    FOREIGN(from_id) REFERENCES users(id),
+    FOREIGN(to_id) REFERENCES users(id),
     TEXT VARCHAR(255),
-    creation_date timestamp DEAFULT CURRENT_TIMESTAMP
-)"""
+    creation_date timestamp DEAFULT CURRENT_TIMESTAMP)"""
+
 USER = "postgres"
 password = "coderslab"
 host = "localhost"
