@@ -41,7 +41,8 @@ class User:
 
     @staticmethod
     def load_user_by_username(cursor, username):
-        sql = "Select * from users where username cursor.execute(sql, (username))""
+        sql = "Select id, username, hashed_password from users where username cursor.execute(sql, (username))"
+        cursor.execute(sql, (username, ))
         date = cursor.fetchone()
         if date:
             id_, username, hashed_password = date
@@ -52,7 +53,8 @@ class User:
 
     @staticmethod
     def load_user_by_id(cursor, id_):
-    sql = "Select * from users where id = %s"
+    sql = "SELECT id, username, hashed_password FROM users WHERE id = %s"
+    cursor.execute(sql, (id_,))
     date = cursor.fetchone()
     if date:
         id_, username, hashed_password = date
