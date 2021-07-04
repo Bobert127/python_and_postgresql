@@ -22,12 +22,62 @@ class User:
     def hashed_password(self, password):
         self.set_password(password)
 
+
     def save_to_db(self, cursor):
         if self._id == -1:
-            sql = """Select  INTO users(username, hashed_password)
-                              VALUES(%s, %s) RETURNING id"""
+            sql = """INSERT INTO users(username, hashed_password)
+                            VALUES(%s, %s) RETURNING id"""
             values = (self.username, self.hashed_password)
             cursor.execute(sql, values)
             self._id = cursor.fetchone()[0]  # or cursor.fetchone()['id']
             return True
-        return False
+        else:
+            sql = """UPDATE Users SET username=%s, hashed_password=%s
+                           WHERE id=%s"""
+            values = (self.username, self.hashed_password, self.id)
+            cursor.execute(sql, values)
+            return True
+
+    @staticmethod
+    def load_user_by_username(cursor, username):
+        sql = "Select * from users where username cursor.execute(sql, (username))""
+        date = cursor.fetchone()
+        if date:
+            id_, username, hashed_password = date
+            loaded_user = User(username)
+            loaded_user._id = id_
+            loaded_user._hashed_password = hashed_password
+            return loaded_user
+
+    @staticmethod
+    def load_user_by_id(cursor, id_):
+    sql = "Select * from users where id = %s"
+    date = cursor.fetchone()
+    if date:
+        id_, username, hashed_password = date
+        loaded_user = User(username)
+        loaded_user._id = id_
+        loaded_user._hashed_password = hashed_password
+        return loaded_user
+
+    @staticmethod
+    def load_all_users(cursor):
+        sql = "SELECT id, username, hashed_password FROM Users"
+        users = []
+        cursor.execute(sql)
+        for row in cursor.fetchall():
+            id_, username, hashed_password = row
+            loaded_user = User()
+            loaded_user._id = id_
+            loaded_user.username = username
+            loaded_user._hashed_password = hashed_password
+            users.append(loaded_user)
+        return users
+
+    def delete(self, cursor):
+        sql = "DELETE FROM Users WHERE id=%s"
+        cursor.execute(sql, (self.id,))
+        self._id = -1
+        return True
+
+
