@@ -85,4 +85,3 @@ def check_password(pass_to_check, hashed):
 
     # compare hashes. If equal, return True
     return new_hash[16:] == hash_to_check
-© 2021 GitHub, Inc.
